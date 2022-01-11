@@ -1,5 +1,5 @@
 import math
-
+from netqasm.sdk.classical_communication.message import StructuredMessage
 
 def epl_protocol_alice(q1, q2, alice, socket):
     """
@@ -18,8 +18,9 @@ def epl_protocol_alice(q1, q2, alice, socket):
     alice.flush()
 
     # Write below the code to send measurement result to Bob, receive measurement result from Bob and check if protocol was successful
-    succ = False
-    return succ
+    socket.send_structured(StructuredMessage("Measurement Alice",a))
+    b_ = socket.recv_structured().payload
+    return a==b_
 
 
 def epl_gates_and_measurement_alice(q1, q2):
@@ -30,8 +31,10 @@ def epl_gates_and_measurement_alice(q1, q2):
     :param q2: Alice's qubit from the second entangled pair
     :return: Integer 0/1 indicating Alice's measurement outcome
     """
-    meas = 0
-    return meas
+
+    q1.cnot(q2)
+    m = q2.measure()
+    return m
 
 
 def epl_protocol_bob(q1, q2, bob, socket):
@@ -51,8 +54,9 @@ def epl_protocol_bob(q1, q2, bob, socket):
     bob.flush()
 
     # Write below the code to send measurement result to Alice, receive measurement result from Alice and check if protocol was successful
-    succ = False
-    return succ
+    socket.send_structured(StructuredMessage("Measurement Bob",b))
+    a_ = socket.recv_structured().payload
+    return b==a_
 
 def epl_gates_and_measurement_bob(q1, q2):
     """
@@ -61,6 +65,7 @@ def epl_gates_and_measurement_bob(q1, q2):
     :param q2: Bob's qubit from the second entangled pair
     :return: Integer 0/1 indicating Bob's measurement outcome
     """
-    meas = 0
-    return meas
+    q1.cnot(q2)
+    m = q2.measure()
+    return m
 

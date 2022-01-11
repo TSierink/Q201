@@ -9,7 +9,7 @@
   OUT: null
   PRC: 52
   QGR:
-    8731610103028:
+    8765273356928:
       is_entangled: true
       qubit_ids:
       - - alice
@@ -18,18 +18,16 @@
         - 1
       - - bob
         - 0
-      - - bob
-        - 1
       state: null
   QID:
   - 0
   - 1
   SID: 0
-  SIT: 503054.0
+  SIT: 503723.0
   VID:
   - 0
   - 1
-  WCT: '2022-01-11 20:36:30.777912'
+  WCT: '2022-01-11 17:32:40.480131'
 - AID: 0
   HFL: null
   HLN: null
@@ -41,20 +39,18 @@
   OUT: 1
   PRC: 54
   QGR:
-    8731610103028:
+    8765273356928:
       is_entangled: true
       qubit_ids:
       - - alice
         - 0
       - - bob
         - 0
-      - - bob
-        - 1
       state: null
   QID:
   - 1
   SID: 0
-  SIT: 503054.0
+  SIT: 503723.0
   VID:
   - 1
-  WCT: '2022-01-11 20:36:30.903499'
+  WCT: '2022-01-11 17:32:40.488165'
