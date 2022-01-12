@@ -1,4 +1,3 @@
-from threading import BrokenBarrierError
 from epl import epl_protocol_bob
 from netqasm.sdk import EPRSocket
 from netqasm.sdk.external import NetQASMConnection, Socket, get_qubit_state
@@ -21,11 +20,10 @@ def main(app_config=None):
     with bob:
         
         # Receive half of epr pairs
-        q1 = epr_socket.recv()[0]
-        q2 = epr_socket.recv()[0]
-
+        qubits = epr_socket.recv(number=2)
+        
         # Execute EPL Protocol
-        result = epl_protocol_bob(q1,q2,bob,socket)
+        result = epl_protocol_bob(qubits[0],qubits[1],bob,socket)
         print(result, "BOB")
 
 if __name__ == "__main__":

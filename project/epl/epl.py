@@ -14,13 +14,19 @@ def epl_protocol_alice(q1, q2, alice, socket):
     :param socket: Alice's classical communication socket to Bob
     :return: True/False indicating if protocol was successful
     """
-    a = epl_gates_and_measurement_alice(q1, q2)
+    ma = epl_gates_and_measurement_alice(q1, q2)
     alice.flush()
 
     # Write below the code to send measurement result to Bob, receive measurement result from Bob and check if protocol was successful
-    socket.send_structured(StructuredMessage("Measurement Alice",a))
-    b_ = socket.recv_structured().payload
-    return a==b_
+    
+    # Alice sends measurement of 2A to Bob
+    socket.send_structured(StructuredMessage("Measurement Alice",int(ma)))
+
+    # Alice receives Bob's measurement
+    mb_ = socket.recv_structured().payload
+
+    # Protocol is succesful if 2A and 2B are 11
+    return int(ma)==1 and int(mb_)==1
 
 
 def epl_gates_and_measurement_alice(q1, q2):
@@ -31,8 +37,10 @@ def epl_gates_and_measurement_alice(q1, q2):
     :param q2: Alice's qubit from the second entangled pair
     :return: Integer 0/1 indicating Alice's measurement outcome
     """
-
+    # CNOT A1->A2 
     q1.cnot(q2)
+
+    # Measure A2 in comp. basis
     m = q2.measure()
     return m
 
@@ -50,13 +58,21 @@ def epl_protocol_bob(q1, q2, bob, socket):
     :param socket: Alice's classical communication socket to Bob
     :return: True/False indicating if protocol was successful
     """
-    b = epl_gates_and_measurement_bob(q1, q2)
+    
+    # Perform operations on EPR pairs
+    mb = epl_gates_and_measurement_bob(q1, q2)
     bob.flush()
 
     # Write below the code to send measurement result to Alice, receive measurement result from Alice and check if protocol was successful
-    socket.send_structured(StructuredMessage("Measurement Bob",b))
-    a_ = socket.recv_structured().payload
-    return b==a_
+    
+    # Bob sends measurement of 2B to Alice
+    ma_ = socket.recv_structured().payload
+   
+    # Bob receives Alice's measurement
+    socket.send_structured(StructuredMessage("Measurement Bob!", int(mb)))
+
+    # Protocol is succesful if 2A and 2B are 11
+    return int(mb)==1 and int(ma_)==1
 
 def epl_gates_and_measurement_bob(q1, q2):
     """
@@ -65,7 +81,10 @@ def epl_gates_and_measurement_bob(q1, q2):
     :param q2: Bob's qubit from the second entangled pair
     :return: Integer 0/1 indicating Bob's measurement outcome
     """
+    # CNOT B1->B2 
     q1.cnot(q2)
+
+    # Measure B2 in comp. basis
     m = q2.measure()
     return m
 

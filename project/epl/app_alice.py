@@ -10,7 +10,6 @@ def main(app_config=None):
     # Create a EPR socket for entanglement generation
     epr_socket = EPRSocket("bob")
 
-
     # Initialize Alice's NetQASM connection
     alice = NetQASMConnection(
         app_name = app_config.app_name,
@@ -21,13 +20,10 @@ def main(app_config=None):
     with alice:
         
         # Create EPR Pair
-        q1 = epr_socket.create()[0]
-        q2 = epr_socket.create()[0]
-        # Comment to test git
-        print("hi")
+        qubits = epr_socket.create(number=2)
 
         # Execute EPL Protocol
-        result = epl_protocol_alice(q1,q2,alice,socket)
+        result = epl_protocol_alice(qubits[0],qubits[1],alice,socket)
         print(result, "ALICE")
 
 if __name__ == "__main__":
