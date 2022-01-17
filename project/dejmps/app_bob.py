@@ -25,6 +25,7 @@ def main(app_config=None):
         # Execute DEJMPS Protocol
         result = dejmps_protocol_bob(qubits[0],qubits[1],bob,socket)
         print(result, "BOB")
+        return result
 
 if __name__ == "__main__":
     main()

@@ -2,72 +2,72 @@
   HFL: null
   HLN: null
   INS: rot_x
-  LOG: Doing instruction rot_x with operands ['Q0=0', '1=None', '1=None']
+  LOG: Doing instruction rot_x with operands ['Q0=0', '3=None', '1=None']
   OPR:
   - Q0=0
-  - 1=None
+  - 3=None
   - 1=None
   OUT: null
-  PRC: 30
+  PRC: 21
   QGR:
-    8766179325728:
+    8743211484620:
       is_entangled: true
       qubit_ids:
       - - alice
-        - 0
+        - 1
       - - bob
-        - 0
+        - 1
       state: null
-    8766179330216:
+    8743223974948:
       is_entangled: true
       qubit_ids:
       - - alice
-        - 1
+        - 0
       - - bob
-        - 1
+        - 0
       state: null
   QID:
   - 0
   SID: 0
-  SIT: 4469.0
+  SIT: 3825.0
   VID:
   - 0
-  WCT: '2022-01-17 13:29:22.292540'
+  WCT: '2022-01-17 13:28:57.309738'
 - AID: 0
   HFL: null
   HLN: null
   INS: rot_x
-  LOG: Doing instruction rot_x with operands ['Q0=1', '1=None', '1=None']
+  LOG: Doing instruction rot_x with operands ['Q0=1', '3=None', '1=None']
   OPR:
   - Q0=1
-  - 1=None
+  - 3=None
   - 1=None
   OUT: null
-  PRC: 32
+  PRC: 23
   QGR:
-    8766179325728:
+    8743211484620:
       is_entangled: true
       qubit_ids:
       - - alice
-        - 0
+        - 1
       - - bob
-        - 0
+        - 1
       state: null
-    8766179330216:
+    8743223974948:
       is_entangled: true
       qubit_ids:
       - - alice
-        - 1
+        - 0
       - - bob
-        - 1
+        - 0
       state: null
   QID:
   - 1
   SID: 0
-  SIT: 5469.0
+  SIT: 4825.0
   VID:
   - 1
-  WCT: '2022-01-17 13:29:22.295476'
+  WCT: '2022-01-17 13:28:57.333109'
 - AID: 0
   HFL: null
   HLN: null
@@ -77,9 +77,41 @@
   - Q0=0
   - Q1=1
   OUT: null
-  PRC: 35
+  PRC: 26
   QGR:
-    8766179325728:
+    8743223974948:
+      is_entangled: true
+      qubit_ids:
+      - - alice
+        - 0
+      - - alice
+        - 1
+      - - bob
+        - 0
+      - - bob
+        - 1
+      state: null
+  QID:
+  - 0
+  - 1
+  SID: 0
+  SIT: 504825.0
+  VID:
+  - 0
+  - 1
+  WCT: '2022-01-17 13:28:57.337402'
+- AID: 0
+  HFL: null
+  HLN: null
+  INS: meas
+  LOG: Doing instruction meas with operands ['Q0=1', 'M0=1']
+  OPR:
+  - Q0=1
+  - M0=1
+  OUT: 1
+  PRC: 28
+  QGR:
+    8743223974948:
       is_entangled: true
       qubit_ids:
       - - alice
@@ -90,37 +122,9 @@
         - 0
       state: null
   QID:
-  - 0
   - 1
   SID: 0
-  SIT: 505469.0
-  VID:
-  - 0
-  - 1
-  WCT: '2022-01-17 13:29:22.317873'
-- AID: 0
-  HFL: null
-  HLN: null
-  INS: meas
-  LOG: Doing instruction meas with operands ['Q0=1', 'M0=0']
-  OPR:
-  - Q0=1
-  - M0=0
-  OUT: 0
-  PRC: 37
-  QGR:
-    8766179325728:
-      is_entangled: true
-      qubit_ids:
-      - - alice
-        - 0
-      - - bob
-        - 0
-      state: null
-  QID:
-  - 1
-  SID: 0
-  SIT: 505469.0
+  SIT: 504825.0
   VID:
   - 1
-  WCT: '2022-01-17 13:29:22.335880'
+  WCT: '2022-01-17 13:28:57.393463'

@@ -25,6 +25,7 @@ def main(app_config=None):
         # Execute EPL Protocol
         result = epl_protocol_alice(qubits[0],qubits[1],alice,socket)
         print(result, "ALICE")
+        return result
 
 if __name__ == "__main__":
     main()
