@@ -8,6 +8,9 @@ nodes:
       - id: 1
         t1: 0
         t2: 0
+      - id: 2
+        t1: 0
+        t2: 0
   - name: "delft"
     gate_fidelity: 1
     qubits:
@@ -15,6 +18,9 @@ nodes:
         t1: 0
         t2: 0
       - id: 1
+        t1: 0
+        t2: 0
+      - id: 2
         t1: 0
         t2: 0
 

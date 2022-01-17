@@ -65,10 +65,10 @@ def bbpssw_protocol_bob(q1, q2, bob, socket):
 
     # Write below the code to send measurement result to Alice, receive measurement result from Alice and check if protocol was successful
     
-    # Bob sends measurement of 2B to Alice
+    # Bob receives Alice's measurement
     ma_ = socket.recv_structured().payload
    
-    # Bob receives Alice's measurement
+    # Bob sends measurement of 2B to Alice
     socket.send_structured(StructuredMessage("Measurement Bob!", int(mb)))
 
     # Protocol is succesful if 2A and 2B are 11

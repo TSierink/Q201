@@ -16,19 +16,18 @@ def three_to_one_protocol_alice(q1, q2, q3, alice, socket):
     :return: True/False indicating if protocol was successful
     """
     outcome1, outcome2 = three_to_one_gates_and_measurement_alice(q1, q2, q3)
-    print("flushing now")
     alice.flush()
-    print("alice done")
+    
     # Write below the code to send measurement result to Bob, receive measurement result from Bob and check if protocol was successful
     
     # Alice receives Bob's measurement
     outcome_bob1 = socket.recv_structured().payload
     outcome_bob2 = socket.recv_structured().payload
-    print("received")
+    
     # Alice sends measurement of 2A to Bob
     socket.send_structured(StructuredMessage("Measurement Alice 1",int(outcome1)))
     socket.send_structured(StructuredMessage("Measurement Alice 2",int(outcome2)))
-    print("sent")
+
     return int(outcome1)==outcome_bob1 and int(outcome2) == outcome_bob2
 
 def three_to_one_gates_and_measurement_alice(q1, q2, q3):
@@ -71,19 +70,17 @@ def three_to_one_protocol_bob(q1, q2, q3, bob, socket):
     :return: True/False indicating if protocol was successful
     """
     outcome1, outcome2 = three_to_one_gates_and_measurement_bob(q1, q2, q3)
-    print("flushing now")
     bob.flush()
-    print("bob done")
+
     # Write below the code to send measurement result to Bob, receive measurement result from Bob and check if protocol was successful
     
     # Bob sends measurement of 2A to Alice
     socket.send_structured(StructuredMessage("Measurement Bob 1",int(outcome1)))
     socket.send_structured(StructuredMessage("Measurement Bob 2",int(outcome2)))
-    print("sent")
+
     # Bob receives Alice's measurement
     outcome_alice1 = socket.recv_structured().payload
     outcome_alice2 = socket.recv_structured().payload
-    print("received")
 
     return int(outcome1)==outcome_alice1 and int(outcome2) == outcome_alice2
 
