@@ -1,0 +1,7 @@
+app_alice:
+  fidelity0: 0.7071067811865474
+  fidelity1: 0.7071067811865474
+  new fidelity0: 0.7071067811865476
+  result: true
+app_bob: true
+backend: null

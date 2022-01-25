@@ -1,5 +1,6 @@
 import math
 from netqasm.sdk.classical_communication.message import StructuredMessage
+from netqasm.sdk.external import get_qubit_state
 
 def epl_protocol_alice(q1, q2, alice, socket):
     """
@@ -14,6 +15,7 @@ def epl_protocol_alice(q1, q2, alice, socket):
     :param socket: Alice's classical communication socket to Bob
     :return: True/False indicating if protocol was successful
     """
+
     ma = epl_gates_and_measurement_alice(q1, q2)
     alice.flush()
 

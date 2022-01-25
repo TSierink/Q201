@@ -25,7 +25,7 @@ def bbpssw_protocol_alice(q1, q2, alice, socket):
     # Alice receives Bob's measurement
     mb_ = socket.recv_structured().payload
 
-    # Protocol is succesful if 2A and 2B are 11
+    # Protocol is succesful if 2A and 2B are equal
     return int(ma)==int(mb_)
 
 
@@ -71,7 +71,7 @@ def bbpssw_protocol_bob(q1, q2, bob, socket):
     # Bob sends measurement of 2B to Alice
     socket.send_structured(StructuredMessage("Measurement Bob!", int(mb)))
 
-    # Protocol is succesful if 2A and 2B are 11
+    # Protocol is succesful if 2A and 2B are equal
     return int(mb)==int(ma_)
 
 def bbpssw_gates_and_measurement_bob(q1, q2):
