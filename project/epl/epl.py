@@ -26,7 +26,7 @@ def epl_protocol_alice(q1, q2, alice, socket):
 
     # Alice receives Bob's measurement
     mb_ = socket.recv_structured().payload
-
+    print(int(ma), int(mb_))
     # Protocol is succesful if 2A and 2B are 11
     return int(ma)==1 and int(mb_)==1
 
@@ -72,7 +72,7 @@ def epl_protocol_bob(q1, q2, bob, socket):
    
     # Bob receives Alice's measurement
     socket.send_structured(StructuredMessage("Measurement Bob!", int(mb)))
-
+    print(int(ma_), int(mb))
     # Protocol is succesful if 2A and 2B are 11
     return int(mb)==1 and int(ma_)==1
 

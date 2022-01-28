@@ -1,0 +1,130 @@
+- AID: 0
+  HFL: null
+  HLN: null
+  INS: rot_x
+  LOG: Doing instruction rot_x with operands ['Q0=0', '1=None', '1=None']
+  OPR:
+  - Q0=0
+  - 1=None
+  - 1=None
+  OUT: null
+  PRC: 3
+  QGR:
+    8780016685912:
+      is_entangled: false
+      qubit_ids:
+      - - alice
+        - 0
+      - - bob
+        - 0
+      state: null
+    8780016688868:
+      is_entangled: false
+      qubit_ids:
+      - - alice
+        - 1
+      - - bob
+        - 1
+      state: null
+  QID:
+  - 0
+  SID: 1
+  SIT: 4920.0
+  VID:
+  - 0
+  WCT: '2022-01-26 13:24:59.241244'
+- AID: 0
+  HFL: null
+  HLN: null
+  INS: rot_x
+  LOG: Doing instruction rot_x with operands ['Q0=1', '1=None', '1=None']
+  OPR:
+  - Q0=1
+  - 1=None
+  - 1=None
+  OUT: null
+  PRC: 5
+  QGR:
+    8780016685912:
+      is_entangled: false
+      qubit_ids:
+      - - alice
+        - 0
+      - - bob
+        - 0
+      state: null
+    8780016688868:
+      is_entangled: false
+      qubit_ids:
+      - - alice
+        - 1
+      - - bob
+        - 1
+      state: null
+  QID:
+  - 1
+  SID: 1
+  SIT: 5920.0
+  VID:
+  - 1
+  WCT: '2022-01-26 13:24:59.280178'
+- AID: 0
+  HFL: null
+  HLN: null
+  INS: cnot
+  LOG: Doing instruction cnot with operands ['Q0=0', 'Q1=1']
+  OPR:
+  - Q0=0
+  - Q1=1
+  OUT: null
+  PRC: 8
+  QGR:
+    8780016685912:
+      is_entangled: null
+      qubit_ids:
+      - - alice
+        - 0
+      - - alice
+        - 1
+      - - bob
+        - 0
+      - - bob
+        - 1
+      state: null
+  QID:
+  - 0
+  - 1
+  SID: 1
+  SIT: 505920.0
+  VID:
+  - 0
+  - 1
+  WCT: '2022-01-26 13:24:59.612540'
+- AID: 0
+  HFL: null
+  HLN: null
+  INS: meas
+  LOG: Doing instruction meas with operands ['Q0=1', 'M0=1']
+  OPR:
+  - Q0=1
+  - M0=1
+  OUT: 1
+  PRC: 10
+  QGR:
+    8780016685912:
+      is_entangled: null
+      qubit_ids:
+      - - alice
+        - 0
+      - - bob
+        - 0
+      - - bob
+        - 1
+      state: null
+  QID:
+  - 1
+  SID: 1
+  SIT: 505920.0
+  VID:
+  - 1
+  WCT: '2022-01-26 13:24:59.702253'

@@ -27,42 +27,45 @@ def main(app_config=None):
         alice.flush()
 
         # Save original qubit states
-        aliceOriginal0 = get_qubit_state(qubits[0])
-        aliceOriginal1 = get_qubit_state(qubits[1])
+        a0_original_state = get_qubit_state(qubits[0])
+        a1_state = get_qubit_state(qubits[1])
         
         # Execute EPL Protocol
         result = epl_protocol_alice(qubits[0],qubits[1],alice,socket)
         print(result, "ALICE")
 
-        fidelity0 = None
-        fidelity1 = None
-        newfidelity0 = None
+        fid0_original = None
+        fid1 = None
+        fid0_new = None
 
         if result:
+            a0_new_state = get_qubit_state(qubits[0])
+
             # Receive Bob's dms
-            bobOriginal0 = numpy.array(eval(socket.recv()))
-            bobOriginal1 = numpy.array(eval(socket.recv()))
-            bobNew0 = numpy.array(eval(socket.recv()))
+            b0_original_state = numpy.array(eval(socket.recv()))
+            b1_state = numpy.array(eval(socket.recv()))
+            b0_new_state = numpy.array(eval(socket.recv()))
 
-            # Process Bob's dms
-            theta0, phi0, r0 = bloch_sphere_rep(bobOriginal0)
-            theta1, phi1, r1 = bloch_sphere_rep(bobOriginal1)
-            thetaNew0, phiNew0, rNew0 = bloch_sphere_rep(bobNew0)
-            b0 = qubit_from(phi0,theta0)
-            b1 = qubit_from(phi1,theta1)
-            bNew0 = qubit_from(phiNew0,thetaNew0)
+            # Convert saved states of Alice back to simulated qubit    
+            a0_original_theta, a0_original_phi, _= bloch_sphere_rep(a0_original_state)
+            a1_theta, a1_phi, _ = bloch_sphere_rep(a1_state)
+            a0_new_theta, a0_new_phi, _= bloch_sphere_rep(a0_new_state)
 
-            # Steps to calculate fidelity
-            fidelity0 = get_fidelity(b0,aliceOriginal0)
-            fidelity1 = get_fidelity(b1,aliceOriginal1)
-            newfidelity0 = get_fidelity(bNew0,get_qubit_state(qubits[0]))
-            print(fidelity0,fidelity1,newfidelity0)
+            a0_original_qubit = qubit_from(a0_original_phi,a0_original_theta)
+            a1_qubit = qubit_from(a1_phi,a1_theta)
+            a0_new_qubit = qubit_from(a0_new_phi,a0_new_theta)
+
+            # Calculate fidelity
+            fid0_original = get_fidelity(a0_original_qubit,b0_original_state)
+            fid1 = get_fidelity(a1_qubit,b1_state)
+            fid0_new = get_fidelity(a0_new_qubit,b0_new_state)
+            print(fid0_original, fid1, fid0_new)
 
         return {
             "result": result,
-            "fidelity0": fidelity0,
-            "fidelity1": fidelity1,
-            "new fidelity0": newfidelity0
+            "fidelity0": fid0_original,
+            "fidelity1": fid1,
+            "new fidelity0": fid0_new
         }
 
 if __name__ == "__main__":

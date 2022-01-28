@@ -1,0 +1,7 @@
+app_alice:
+  fidelity0: null
+  fidelity1: null
+  new fidelity0: null
+  result: false
+app_bob: false
+backend: null

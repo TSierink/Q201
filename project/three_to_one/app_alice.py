@@ -27,49 +27,52 @@ def main(app_config=None):
         alice.flush()
 
         # Save state of original qubits
-        aliceOriginal0 = get_qubit_state(qubits[0])
-        aliceOriginal1 = get_qubit_state(qubits[1])
-        aliceOriginal2 = get_qubit_state(qubits[2])
+        a0_state = get_qubit_state(qubits[0])
+        a1_state = get_qubit_state(qubits[1])
+        a2_original_state = get_qubit_state(qubits[2])
 
         # Execute DEJMPS Protocol
         result = three_to_one_protocol_alice(qubits[0],qubits[1],qubits[2],alice,socket)
         print(result, "ALICE")
 
-        fidelity0 = None
-        fidelity1 = None
-        fidelity2 = None
-        newfidelity0 = None
+        fid0 = None
+        fid1 = None
+        fid2_original = None
+        fid2_new = None
 
         if result:
+            a2_new_state = get_qubit_state(qubits[2])
+
             # Receive Bob's dms
-            bobOriginal0 = numpy.array(eval(socket.recv()))
-            bobOriginal1 = numpy.array(eval(socket.recv()))
-            bobOriginal2 = numpy.array(eval(socket.recv()))
-            bobNew2 = numpy.array(eval(socket.recv()))
+            b0_state = numpy.array(eval(socket.recv()))
+            b1_state = numpy.array(eval(socket.recv()))
+            b2_original_state = numpy.array(eval(socket.recv()))
+            b2_new_state = numpy.array(eval(socket.recv()))
 
-            # Process Bob's dms
-            theta0, phi0, r0 = bloch_sphere_rep(bobOriginal0)
-            theta1, phi1, r1 = bloch_sphere_rep(bobOriginal1)
-            theta2, phi2, r2 = bloch_sphere_rep(bobOriginal2)
-            thetaNew2, phiNew2, rNew2 = bloch_sphere_rep(bobNew2)
-            b0 = qubit_from(phi0,theta0)
-            b1 = qubit_from(phi1,theta1)
-            b2 = qubit_from(phi2,theta2)
-            bNew2 = qubit_from(phiNew2,thetaNew2)
+            # Convert saved states of Alice back to simulated qubit    
+            a0_theta, a0_phi, _= bloch_sphere_rep(a0_state)
+            a1_theta, a1_phi, _ = bloch_sphere_rep(a1_state)
+            a2_original_theta, a2_original_phi, _= bloch_sphere_rep(a2_original_state)
+            a2_new_theta, a2_new_phi, _ = bloch_sphere_rep(a2_new_state)
 
-            # Steps to calculate fidelity
-            fidelity0 = get_fidelity(b0,aliceOriginal0)
-            fidelity1 = get_fidelity(b1,aliceOriginal1)
-            fidelity2 = get_fidelity(b2,aliceOriginal2)
-            newfidelity0 = get_fidelity(bNew2,get_qubit_state(qubits[2]))
-            print(fidelity0,fidelity1,fidelity2,newfidelity0)
+            a0_original_qubit = qubit_from(a0_phi,a0_theta)
+            a1_qubit = qubit_from(a1_phi,a1_theta)
+            a2_original_qubit = qubit_from(a2_original_phi,a2_original_theta)
+            a2_new_qubit = qubit_from(a2_new_phi,a2_new_theta)
+
+            # Calculate fidelity
+            fid0 = get_fidelity(a0_original_qubit,b0_state)
+            fid1 = get_fidelity(a1_qubit,b1_state)
+            fid2_original = get_fidelity(a2_original_qubit,b2_original_state)
+            fid2_new = get_fidelity(a2_new_qubit,b2_new_state)
+            print(fid0, fid1, fid2_original, fid2_new)
 
         return {
             "result": result,
-            "fidelity0": fidelity0,
-            "fidelity1": fidelity1,
-            "fidelity2": fidelity2,
-            "new fidelity0": newfidelity0
+            "fidelity0": fid0,
+            "fidelity1": fid1,
+            "fidelity2": fid2_original,
+            "new fidelity2": fid2_new
         }
 if __name__ == "__main__":
     main()

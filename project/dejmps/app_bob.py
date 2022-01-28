@@ -9,7 +9,7 @@ def main(app_config=None):
     socket = Socket("bob","alice")
     
     # Create a EPR socket for entanglement generation
-    epr_socket = EPRSocket("alice")
+    epr_socket = EPRSocket("alice", min_fidelity=0)
 
     # Initialize Alice's NetQASM connection
     bob = NetQASMConnection(
