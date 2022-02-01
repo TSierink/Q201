@@ -1,9 +1,10 @@
 from three_to_one import three_to_one_protocol_alice
 from netqasm.sdk import EPRSocket
 from netqasm.sdk.external import NetQASMConnection, Socket, get_qubit_state
-from netqasm.sdk.toolbox.sim_states import get_fidelity, to_dm, qubit_from
-from netqasm.util.states import bloch_sphere_rep
-import numpy
+
+from netsquid.qubits import ketstates
+from netsquid.qubits.dmtools import DMState
+from netsquid.qubits.qubitapi import create_qubits
 
 def main(app_config=None):
 
@@ -26,53 +27,34 @@ def main(app_config=None):
         qubits = epr_socket.create(number=3)
         alice.flush()
 
-        # Save state of original qubits
-        a0_state = get_qubit_state(qubits[0])
-        a1_state = get_qubit_state(qubits[1])
-        a2_original_state = get_qubit_state(qubits[2])
+        # Prepare printing stuff
+        start_fidelity = 0
+        end_fidelity = 0
 
-        # Execute DEJMPS Protocol
+        # Get starting fidelity
+        dm = get_qubit_state(qubits[0], reduced_dm=False)
+        if(dm.shape == (4,4)):
+            storage = create_qubits(num_qubits=2)
+            dm = DMState(storage,dm)
+            start_fidelity = dm.fidelity(ketstates.b00)
+
+
+        # Execute 3-1 Protocol
         result = three_to_one_protocol_alice(qubits[0],qubits[1],qubits[2],alice,socket)
-        print(result, "ALICE")
 
-        fid0 = None
-        fid1 = None
-        fid2_original = None
-        fid2_new = None
 
-        if result:
-            a2_new_state = get_qubit_state(qubits[2])
+        # Get ending fidelity
+        dm = get_qubit_state(qubits[2], reduced_dm=False)
+        if(dm.shape == (4,4)):
+            storage = create_qubits(num_qubits=2)
+            dm = DMState(storage,dm)
 
-            # Receive Bob's dms
-            b0_state = numpy.array(eval(socket.recv()))
-            b1_state = numpy.array(eval(socket.recv()))
-            b2_original_state = numpy.array(eval(socket.recv()))
-            b2_new_state = numpy.array(eval(socket.recv()))
+            end_fidelity = dm.fidelity(ketstates.b00)
 
-            # Convert saved states of Alice back to simulated qubit    
-            a0_theta, a0_phi, _= bloch_sphere_rep(a0_state)
-            a1_theta, a1_phi, _ = bloch_sphere_rep(a1_state)
-            a2_original_theta, a2_original_phi, _= bloch_sphere_rep(a2_original_state)
-            a2_new_theta, a2_new_phi, _ = bloch_sphere_rep(a2_new_state)
+        if(result):
+            print("fidelities",start_fidelity,end_fidelity) 
 
-            a0_original_qubit = qubit_from(a0_phi,a0_theta)
-            a1_qubit = qubit_from(a1_phi,a1_theta)
-            a2_original_qubit = qubit_from(a2_original_phi,a2_original_theta)
-            a2_new_qubit = qubit_from(a2_new_phi,a2_new_theta)
-
-            # Calculate fidelity
-            fid0 = get_fidelity(a0_original_qubit,b0_state)
-            fid1 = get_fidelity(a1_qubit,b1_state)
-            fid2_original = get_fidelity(a2_original_qubit,b2_original_state)
-            fid2_new = get_fidelity(a2_new_qubit,b2_new_state)
-            print(fid0, fid1, fid2_original, fid2_new)
-
-        return {
-            "result": result,
-            "fidelity0": fid0,
-            "fidelity1": fid1,
-            "fidelity2": fid2_original,
-            "new fidelity2": fid2_new
-        }
+        return result
+        
 if __name__ == "__main__":
     main()

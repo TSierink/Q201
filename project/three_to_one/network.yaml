@@ -1,28 +1,28 @@
 nodes:
   - name: "the_hague"
-    gate_fidelity: 0.9
+    gate_fidelity: 1
     qubits:
       - id: 0
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
       - id: 1
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
       - id: 2
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
   - name: "delft"
-    gate_fidelity: 0.9
+    gate_fidelity: 1
     qubits:
       - id: 0
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
       - id: 1
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
       - id: 2
-        t1: 0.000001
-        t2: 0.000001
+        t1: 0
+        t2: 0
 
 links:
   - name: ch1
