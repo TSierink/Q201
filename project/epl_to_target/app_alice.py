@@ -9,6 +9,7 @@ from netsquid.qubits.dmtools import DMState
 from netsquid.qubits.kettools import KetState
 from netsquid.qubits.qubitapi import create_qubits, assign_qstate
 
+import time
 
 
 
@@ -24,7 +25,7 @@ def main(app_config=None):
     alice = NetQASMConnection(
         app_name = app_config.app_name,
         epr_sockets = [epr_socket],
-        max_qubits = 100
+        max_qubits = 1000
     )
 
 
@@ -35,72 +36,64 @@ def main(app_config=None):
         old_pair = epr_socket.create(number=1)
         alice.flush()
 
-        dm = get_qubit_state(old_pair[0], reduced_dm=False)
+        print("Base fidelity: ", get_fidelity(old_pair)) 
 
-        if(dm.shape == (4,4)):
-            # Prepare storage for comparing
-            storage = create_qubits(num_qubits=2)
-            # Place the state of the combined pair into the storage
-            dm = DMState(storage,dm)
+        old_pair[0].free()
 
-            # Compare with the desired EPR pair
-            fidelity = dm.fidelity(ketstates.b00)
-
-            print("Base fidelity:" + str(fidelity)) 
-
-
-        fidelity = 0
-        good_pairs = []
-
-        for i in range(12):
+        while(True):
             # Create EPR Pairs
-            qubits = epr_socket.create(number=2)
+            qubits = epr_socket.create(number=4)
             alice.flush()
 
             # Execute EPL Protocol
-            result = epl_protocol_alice(qubits[0],qubits[1],alice,socket)
+            result1 = epl_protocol_alice(qubits[0],qubits[1],alice,socket)
             alice.flush()
 
-            # Get dm representation of both qubits (not reduced)
-            dm = get_qubit_state(qubits[0], reduced_dm=False)
-            if(dm.shape == (4,4)):
-                # Prepare storage for comparing
-                storage = create_qubits(num_qubits=2)
-                # Place the state of the combined pair into the storage
-                dm = DMState(storage,dm)
-
-                # Compare with the desired EPR pair
-                fidelity = dm.fidelity(ketstates.b00)
-
-                #print("Fidelity old_pair: " + str(fidelity)) 
-
-            print("Round " + str(i), result, fidelity)
-
-            if(result == True):
-                good_pairs.append(qubits[0])
-
-        print("PHASE 2")
-        for i in range(0,len(good_pairs)-1,2):
-            # Execute EPL Protocol
-            result = epl_protocol_alice(good_pairs[i],good_pairs[i+1],alice,socket)
-            #print(result, "ALICE")
+            result2 = epl_protocol_alice(qubits[2],qubits[3],alice,socket)
             alice.flush()
 
-            # Get dm representation of both qubits (not reduced)
-            dm = get_qubit_state(good_pairs[i], reduced_dm=False)
-            if(dm.shape == (4,4)):
-                # Prepare storage for comparing
-                storage = create_qubits(num_qubits=2)
-                # Place the state of the combined pair into the storage
-                dm = DMState(storage,dm)
+            print(result1, result2, get_fidelity(qubits[0]), get_fidelity(qubits[2]))
 
-                # Compare with the desired EPR pair
-                fidelity = dm.fidelity(ketstates.b00)
+            if(result1 and result2):
+                dm1 = get_qubit_state(qubits[0], reduced_dm=False)
+                dm2 = get_qubit_state(qubits[2], reduced_dm=False)
+                print(dm1.shape)                
+                print(dm2.shape)   
 
-            print("Round " + str(i), result, fidelity)
+                result3 = epl_protocol_alice(qubits[0],qubits[2],alice,socket)
+                alice.flush()
+
+                print(result3, get_fidelity(qubits[0]))
+
+                dm = get_qubit_state(qubits[0], reduced_dm=False)
+
+                qubits[0].free()
+                if(result3 and dm.shape==(4,4) and dm1.shape==(4,4) and dm2.shape==(4,4)):
+                    break
+            else:
+                qubits[0].free()
+                qubits[2].free()
+
+            alice.flush()
+        return True
 
 
-        return result
+
+def get_fidelity(qubit):
+    fidelity = 0
+    # Get dm representation of both qubits (not reduced)
+    dm = get_qubit_state(qubit, reduced_dm=False)
+    if(dm.shape == (4,4)):
+        # Prepare storage for comparing
+        storage = create_qubits(num_qubits=2)
+        # Place the state of the combined pair into the storage
+        dm = DMState(storage,dm)
+
+        # Compare with the desired EPR pair
+        fidelity = dm.fidelity(ketstates.b00)
+    return fidelity
+    
+
 
 if __name__ == "__main__":
     main()

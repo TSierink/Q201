@@ -21,7 +21,7 @@ def main(app_config=None):
     bob = NetQASMConnection(
         app_name = app_config.app_name,
         epr_sockets = [epr_socket],
-        max_qubits = 100
+        max_qubits = 1000
     )
 
     # Create Bob's context, initialize EPR pairs inside it and call Bob's EPL method. Finally, print out whether or not Bob successfully created an EPR Pair with Alice.
@@ -29,31 +29,39 @@ def main(app_config=None):
         old_pair = epr_socket.recv(number=1)
         bob.flush()
 
-        dm = get_qubit_state(old_pair[0], reduced_dm=False)
+        old_pair[0].free()
 
-        good_pairs = []
-
-        for i in range(12):
+        while(True):
             # Create EPR Pairs
-            qubits = epr_socket.recv(number=2)
+            qubits = epr_socket.recv(number=4)
             bob.flush()
 
             # Execute EPL Protocol
-            result = epl_protocol_bob(qubits[0],qubits[1],bob,socket)
-            #print(result, "BOB")
+            result1 = epl_protocol_bob(qubits[0],qubits[1],bob,socket)
             bob.flush()
 
-            if(result == True):
-                good_pairs.append(qubits[0])
-
-        for i in range(0,len(good_pairs)-1,2):
-            # Execute EPL Protocol
-            result = epl_protocol_bob(good_pairs[i],good_pairs[i+1],bob,socket)
-            #print(result, "ALICE")
+            result2 = epl_protocol_bob(qubits[2],qubits[3],bob,socket)
             bob.flush()
 
+            if(result1 and result2):
+                dm1 = get_qubit_state(qubits[0], reduced_dm=False)
+                dm2 = get_qubit_state(qubits[2], reduced_dm=False)
 
-        return result
+                result3 = epl_protocol_bob(qubits[0],qubits[2],bob,socket)
+                bob.flush()
+
+                dm = get_qubit_state(qubits[0], reduced_dm=False)
+
+                qubits[0].free()
+                if(result3 and dm.shape==(4,4) and dm1.shape==(4,4) and dm2.shape==(4,4)):
+                    break
+            else:
+                qubits[0].free()
+                qubits[2].free()
+
+            bob.flush()
+        return True
+
 
 if __name__ == "__main__":
     main()
